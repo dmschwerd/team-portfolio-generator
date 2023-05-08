@@ -99,6 +99,7 @@ const promptEngineer = teamData => {
     ])
     .then(memberData => {
         teamData.members.push(memberData);
+        console.log(teamData.members);
         if (memberData.confirmAddEngineer) {
             return promptEngineer(teamData);
         } else {
@@ -113,7 +114,46 @@ const promptIntern = teamData => {
         Add a New Intern
         ================
     `);
-}
+    if (!teamData.members) {
+        teamData.members = [];
+    }
+    return inquirer.prompt([
+        {
+            type: 'input',
+            name: 'internName',
+            message: 'What is the name of the intern?'
+        },
+        {
+            type: 'number',
+            name: 'internId',
+            message: 'What is the ID number of the intern?'
+        },
+        {
+            type: 'input',
+            name: 'internEmail',
+            message: 'What is the email of the intern?'
+        },
+        {
+            type: 'input',
+            name: 'internSchool',
+            message: 'What school is the intern attending?'
+        },
+        {
+            type: 'confirm',
+            name: 'confirmAddIntern',
+            message: 'Would you like to add another intern to the team?',
+            default: true
+        }
+    ])
+    .then(memberData => {
+        teamData.members.push(memberData);
+        if (memberData.confirmAddIntern) {
+            return promptIntern(teamData);
+        } else {
+            return teamData;
+        }      
+    });
+};
 
 promptManager()
     .then(promptEngineer)
@@ -121,3 +161,16 @@ promptManager()
     .then(teamData => {
         return generatePage(teamData);
     })
+    .then(pageHTML => {
+        return writeFile(pageHTML);
+    })
+    .then(writeFileResponse => {
+        console.log(writeFileResponse);
+        return copyFile();
+    })
+    .then(copyFileResponse => {
+        console.log(copyFileResponse);
+    })
+    .catch(err => {
+        console.log(err);
+    });
