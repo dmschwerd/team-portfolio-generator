@@ -19,7 +19,7 @@ const promptManager = () => {
         },
         {
             type: 'number',
-            name: 'managerRoom',
+            name: 'managerId',
             message: "What is your team manager's ID number?",
             validate: managerIdInput => {
                 if (managerIdInput) {
@@ -46,12 +46,12 @@ const promptManager = () => {
         {
             type: 'number',
             name: 'managerRoom',
-            message: "What is your manager's ID?",
+            message: "What is your manager's office number?",
             validate: managerRoomInput => {
                 if (managerRoomInput) {
                     return true;
                 } else {
-                    console.log("Please enter your team manager's ID.");
+                    console.log("Please enter your team manager's office number.");
                 return false;
                 }
             }
@@ -99,7 +99,6 @@ const promptEngineer = teamData => {
     ])
     .then(memberData => {
         teamData.members.push(memberData);
-        console.log(teamData.members);
         if (memberData.confirmAddEngineer) {
             return promptEngineer(teamData);
         } else {
@@ -158,7 +157,8 @@ const promptIntern = teamData => {
 promptManager()
     .then(promptEngineer)
     .then(promptIntern)
-    .then(teamData => {
+    .then(teamData => {  
+        console.log(teamData);
         return generatePage(teamData);
     })
     .then(pageHTML => {
